@@ -3,10 +3,12 @@ package uk.zebington.junkcraft.common.tileentities
 import net.minecraft.enchantment.Enchantment
 import net.minecraft.entity.player.EntityPlayer
 import net.minecraft.inventory.IInventory
-import net.minecraft.item.{ItemArmor, Item, ItemStack}
+import net.minecraft.item.{Item, ItemArmor, ItemStack}
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.IChatComponent
+import uk.zebington.junkcraft.handlers.JCPacketHandler
 import uk.zebington.junkcraft.init.JCItems
+import uk.zebington.junkcraft.messages.MessageSpikeStation
 
 /**
  * Created by Charlotte on 22/02/2015.
@@ -16,15 +18,8 @@ class TileEntitySpikeStation extends TileEntity with IInventory {
 
   var inv = new Array[ItemStack](3)
 
-  override def getSizeInventory: Int = inv.length
-
   override def decrStackSize(i: Int, c: Int): ItemStack = if (this.inv(i) != null) {
     var itemstack: ItemStack = null
-    if (i == 2) {
-      inv(0).stackSize -= 1
-      inv(1).stackSize -= 1
-      for (i <- 0 to 1) if (inv(0) != null & inv(0).stackSize <= 0) inv(0) == null
-    }
 
     if (this.inv(i).stackSize <= c) {
       itemstack = this.inv(i)
@@ -37,6 +32,7 @@ class TileEntitySpikeStation extends TileEntity with IInventory {
       markDirty()
       itemstack
     }
+
   } else null
 
   override def closeInventory(playerIn: EntityPlayer) {}
@@ -50,6 +46,8 @@ class TileEntitySpikeStation extends TileEntity with IInventory {
   }
 
   override def isItemValidForSlot(index: Int, stack: ItemStack): Boolean = index != getSizeInventory - 1
+
+  override def getSizeInventory: Int = inv.length
 
   override def getStackInSlotOnClosing(i: Int): ItemStack = inv(i)
 
@@ -79,4 +77,6 @@ class TileEntitySpikeStation extends TileEntity with IInventory {
       inv(2).addEnchantment(Enchantment.thorns, 1)
     }
   }
+
+  override def getDescriptionPacket = JCPacketHandler.Instance.getPacketFrom(new MessageSpikeStation(this))
 }

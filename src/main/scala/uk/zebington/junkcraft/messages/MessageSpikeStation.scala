@@ -1,7 +1,7 @@
 package uk.zebington.junkcraft.messages
 
 import io.netty.buffer.ByteBuf
-import net.minecraft.item.{ItemStack, Item}
+import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.client.FMLClientHandler
 import net.minecraftforge.fml.common.network.simpleimpl.{IMessage, IMessageHandler, MessageContext}
@@ -22,15 +22,15 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
     z = te.getPos.getZ
 
     items = Array(
-      Array(Item.getIdFromItem(te.inv(0).getItem), te.inv(0).stackSize, te.inv(0).getMetadata),
-      Array(Item.getIdFromItem(te.inv(1).getItem), te.inv(1).stackSize, te.inv(1).getMetadata),
-      Array(Item.getIdFromItem(te.inv(2).getItem), te.inv(2).stackSize, te.inv(2).getMetadata)
+      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(0).getItem), te.inv(0).stackSize, te.inv(0).getMetadata) else Array(0, 0, 0),
+      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(1).getItem), te.inv(1).stackSize, te.inv(1).getMetadata) else Array(0, 0, 0),
+      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(2).getItem), te.inv(2).stackSize, te.inv(2).getMetadata) else Array(0, 0, 0)
     )
   }
 
   override def onMessage(message: MessageSpikeStation, ctx: MessageContext): IMessage = FMLClientHandler.instance().getClient.theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z)) match {
     case te: TileEntitySpikeStation =>
-      for (i <- 0 to 2) te.inv(i) = new ItemStack(Item.getItemById(message.items(i)(0)), message.items(i)(1), message.items(i)(2))
+      for (i <- 0 to 2) te.inv(i) = if (message.items(i)(0) == 0) null else new ItemStack(Item.getItemById(message.items(i)(0)), message.items(i)(1), message.items(i)(2))
       null
     case _ => null
   }

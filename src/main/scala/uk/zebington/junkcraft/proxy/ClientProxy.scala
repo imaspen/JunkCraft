@@ -1,11 +1,9 @@
 package uk.zebington.junkcraft.proxy
 
-import net.minecraft.block.Block
-import net.minecraft.client.resources.model.{ModelBakery, ModelResourceLocation}
-import net.minecraft.init.Blocks
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.model.ModelResourceLocation
 import net.minecraft.item.Item
 import uk.zebington.junkcraft._
-import net.minecraft.client.Minecraft
 import uk.zebington.junkcraft.init.{JCBlocks, JCItems}
 
 /**
@@ -22,5 +20,6 @@ class ClientProxy extends CommonProxy {
     modMesh register(JCItems.CarDoor, 0, new ModelResourceLocation(s"$Id:$NCarDoor", "inventory"))
 
     modMesh register(Item.getItemFromBlock(JCBlocks.ElectricFence), 0, new ModelResourceLocation(s"$Id:$NElectricFence", "inventory"))
+    modMesh register(Item.getItemFromBlock(JCBlocks.SpikeStation), 0, new ModelResourceLocation(s"$Id:$NSpikeStation", "inventory"))
   }
 }
