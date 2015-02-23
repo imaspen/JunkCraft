@@ -1,0 +1,7 @@
+{
+  "parent": "block/pane_ns",
+  "textures": {
+    "edge": "junkcraft:block/electricfencetop",
+    "pane": "junkcraft:block/electricfence"
+  }
+}
