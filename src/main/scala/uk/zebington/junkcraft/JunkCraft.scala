@@ -1,14 +1,13 @@
 package uk.zebington.junkcraft
 
-import net.minecraft.init.Items
-import net.minecraft.item.{Item, ItemStack, ItemArmor}
+import net.minecraft.item.{Item, ItemArmor, ItemStack}
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.Mod.{EventHandler, Instance}
-import net.minecraftforge.fml.common.event.{FMLLoadCompleteEvent, FMLPostInitializationEvent, FMLPreInitializationEvent, FMLInitializationEvent}
+import net.minecraftforge.fml.common.event.{FMLInitializationEvent, FMLLoadCompleteEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.common.registry.{GameData, GameRegistry}
 import net.minecraftforge.fml.common.{FMLCommonHandler, Mod, SidedProxy}
-import uk.zebington.junkcraft.handlers.{JCPacketHandler, JCGuiHandler, JCEventHandler}
+import uk.zebington.junkcraft.handlers.{JCEventHandler, JCGuiHandler, JCPacketHandler}
 import uk.zebington.junkcraft.init.{JCBlocks, JCItems}
 import uk.zebington.junkcraft.proxy.CommonProxy
 

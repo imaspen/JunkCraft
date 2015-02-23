@@ -11,7 +11,8 @@ import uk.zebington.junkcraft.common.tileentities.TileEntitySpikeStation
  * Created by Charlotte on 22/02/2015.
  */
 class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStation, IMessage] {
-  var x, y, z: Int = 0
+  var x, y, z, stored, nStored: Int = 0
+  var mode: Byte = 0
   // 0 = itemID, 1 = stackSize, 2 = metaData
   var items: Array[Array[Int]] = Array(Array(0, 0, 0), Array(0, 0, 0), Array(0, 0, 0))
 
@@ -21,16 +22,25 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
     y = te.getPos.getY
     z = te.getPos.getZ
 
+    stored = if (te.stored != null) Item.getIdFromItem(te.stored) else 0
+    nStored = te.nStored
+    mode = te.mode
+
     items = Array(
       if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(0).getItem), te.inv(0).stackSize, te.inv(0).getMetadata) else Array(0, 0, 0),
-      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(1).getItem), te.inv(1).stackSize, te.inv(1).getMetadata) else Array(0, 0, 0),
-      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(2).getItem), te.inv(2).stackSize, te.inv(2).getMetadata) else Array(0, 0, 0)
+      if (te.inv(1) != null) Array(Item.getIdFromItem(te.inv(1).getItem), te.inv(1).stackSize, te.inv(1).getMetadata) else Array(0, 0, 0),
+      if (te.inv(2) != null) Array(Item.getIdFromItem(te.inv(2).getItem), te.inv(2).stackSize, te.inv(2).getMetadata) else Array(0, 0, 0)
     )
   }
 
   override def onMessage(message: MessageSpikeStation, ctx: MessageContext): IMessage = FMLClientHandler.instance().getClient.theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z)) match {
     case te: TileEntitySpikeStation =>
+      te.stored = if (message.stored > 0) Item.getItemById(message.stored) else null
+      te.nStored = message.nStored
+      te.mode = message.mode
+
       for (i <- 0 to 2) te.inv(i) = if (message.items(i)(0) == 0) null else new ItemStack(Item.getItemById(message.items(i)(0)), message.items(i)(1), message.items(i)(2))
+
       null
     case _ => null
   }
@@ -39,6 +49,11 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
     x = buf readInt()
     y = buf readInt()
     z = buf readInt()
+
+    stored = buf readInt()
+    nStored = buf readInt()
+    mode = buf readByte()
+
     for (i <- 0 to 2) for (j <- 0 to 2) items(i)(j) = buf.readInt()
   }
 
@@ -46,6 +61,11 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
     buf writeInt x
     buf writeInt y
     buf writeInt z
+
+    buf writeInt stored
+    buf writeInt nStored
+    buf writeByte mode
+
     for (i <- 0 to 2) for (j <- 0 to 2) buf writeInt items(i)(j)
   }
 }

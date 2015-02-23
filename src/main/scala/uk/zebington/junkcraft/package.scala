@@ -2,7 +2,6 @@ package uk.zebington
 
 import net.minecraft.creativetab.CreativeTabs
 import net.minecraft.item.Item
-import net.minecraft.util.DamageSource
 import uk.zebington.junkcraft.init.JCItems
 
 /**
@@ -20,6 +19,7 @@ package object junkcraft {
   final val NKnife = "knife"
   final val NPickerUpper = "pickerupper"
   final val NCarDoor = "cardoor"
+  final val NSpikes = "spikes"
 
   // Blocks
   final val NElectricFence = "electricfence"
