@@ -18,6 +18,10 @@ class BlockSpikeStation extends Block(Material.rock) with BlockJC with ITileEnti
 
   override def createNewTileEntity(worldIn: World, meta: Int): TileEntity = new TileEntitySpikeStation
 
+  override def isOpaqueCube = false
+
+  override def isFullCube = false
+
   override def onBlockActivated(world: World, pos: BlockPos, state: IBlockState, player: EntityPlayer, side: EnumFacing, x: Float, y: Float, z: Float): Boolean = {
     if (player.isSneaking) return false
     if (world.isRemote) true

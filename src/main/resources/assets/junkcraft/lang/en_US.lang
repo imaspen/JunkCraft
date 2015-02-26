@@ -1,1 +1,10 @@
+tile.electricfence.name=Electric Fence
+tile.spikestation.name=Spike Station
+
+item.stabber.name=Stabber
 item.knife.name=Knife
+item.pickerupper.name=Picker Upper
+item.cardoor.name=Car Door
+item.spikes.name=Spikes
+
+itemGroup.junkcraft=Junk Craft

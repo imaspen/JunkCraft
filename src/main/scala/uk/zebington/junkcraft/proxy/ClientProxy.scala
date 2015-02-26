@@ -18,6 +18,7 @@ class ClientProxy extends CommonProxy {
     modMesh register(JCItems.Knife, 0, new ModelResourceLocation(s"$Id:$NKnife", "inventory"))
     modMesh register(JCItems.PickerUpper, 0, new ModelResourceLocation(s"$Id:$NPickerUpper", "inventory"))
     modMesh register(JCItems.CarDoor, 0, new ModelResourceLocation(s"$Id:$NCarDoor", "inventory"))
+    modMesh register(JCItems.Spikes, 0, new ModelResourceLocation(s"$Id:$NSpikes", "inventory"))
 
     modMesh register(Item.getItemFromBlock(JCBlocks.ElectricFence), 0, new ModelResourceLocation(s"$Id:$NElectricFence", "inventory"))
     modMesh register(Item.getItemFromBlock(JCBlocks.SpikeStation), 0, new ModelResourceLocation(s"$Id:$NSpikeStation", "inventory"))
