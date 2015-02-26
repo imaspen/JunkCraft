@@ -6,8 +6,6 @@ import net.minecraft.item.{ItemArmor, ItemStack}
 import uk.zebington.junkcraft.common.tileentities.TileEntitySpikeStation
 import uk.zebington.junkcraft.init.JCItems
 
-import scala.util.control.Breaks.break
-
 /**
  * Created by Charlotte on 23/02/2015.
  */
@@ -18,10 +16,10 @@ class SlotSpikeStationOutput(te: TileEntitySpikeStation, ind: Int, x: Int, y: In
       te.decrStackSize(0, 1)
       te.decrStackSize(1, 1)
     } else if (itemStack.getItem == JCItems.Spikes) {
-      for (i <- 0 to 1) if (te.getStackInSlot(i) != null) {
-        val stack = te.getStackInSlot(i)
-        te.decrStackSize(i, if (te.SpikyItems.contains(stack.getItem)) te.SpikyItems.get(stack.getItem).asInstanceOf[Int] else 64)
-        break()
+      te.nStored -= te.SpikyItems(te.stored)
+      if (te.nStored <= 0) {
+        te.stored = null
+        te.nStored = 0
       }
     }
   }

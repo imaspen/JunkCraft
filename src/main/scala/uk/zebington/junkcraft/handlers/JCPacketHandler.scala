@@ -13,5 +13,6 @@ object JCPacketHandler {
 
   def init() {
     Instance.registerMessage(classOf[MessageSpikeStation], classOf[MessageSpikeStation], 0, Side.CLIENT)
+    Instance.registerMessage(classOf[MessageSpikeStation], classOf[MessageSpikeStation], 1, Side.SERVER)
   }
 }

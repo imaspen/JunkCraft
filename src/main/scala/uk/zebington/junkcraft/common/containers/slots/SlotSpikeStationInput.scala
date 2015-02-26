@@ -13,10 +13,12 @@ class SlotSpikeStationInput(te: TileEntitySpikeStation, ind: Int, x: Int, y: Int
       if (te.nStored == 0) {
         te.stored = te.inv(0).getItem
         te.nStored += 1
-        decrStackSize(1)
+        te.decrStackSize(0, 1)
+        te.markDirty()
       } else if (te.stored == te.inv(0).getItem) {
         te.nStored += 1
-        decrStackSize(1)
+        te.decrStackSize(0, 1)
+        te.markDirty()
       }
     }
   }

@@ -4,6 +4,7 @@ import io.netty.buffer.ByteBuf
 import net.minecraft.item.{Item, ItemStack}
 import net.minecraft.util.BlockPos
 import net.minecraftforge.fml.client.FMLClientHandler
+import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.common.network.simpleimpl.{IMessage, IMessageHandler, MessageContext}
 import uk.zebington.junkcraft.common.tileentities.TileEntitySpikeStation
 
@@ -11,61 +12,86 @@ import uk.zebington.junkcraft.common.tileentities.TileEntitySpikeStation
  * Created by Charlotte on 22/02/2015.
  */
 class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStation, IMessage] {
-  var x, y, z, stored, nStored: Int = 0
+  var x, y, z: Int = 0
+  var inv = new Array[ItemStack](3)
+  var scheduleSwitchMode: Boolean = false
   var mode: Byte = 0
-  // 0 = itemID, 1 = stackSize, 2 = metaData
-  var items: Array[Array[Int]] = Array(Array(0, 0, 0), Array(0, 0, 0), Array(0, 0, 0))
+  var stored: Item = null
+  var nStored: Int = 0
 
   def this(te: TileEntitySpikeStation) {
-    this()
-    x = te.getPos.getX
-    y = te.getPos.getY
-    z = te.getPos.getZ
+    this
+    this.x = te.getPos.getX
+    this.y = te.getPos.getY
+    this.z = te.getPos.getZ
 
-    stored = if (te.stored != null) Item.getIdFromItem(te.stored) else 0
-    nStored = te.nStored
-    mode = te.mode
+    this.inv = te.inv
 
-    items = Array(
-      if (te.inv(0) != null) Array(Item.getIdFromItem(te.inv(0).getItem), te.inv(0).stackSize, te.inv(0).getMetadata) else Array(0, 0, 0),
-      if (te.inv(1) != null) Array(Item.getIdFromItem(te.inv(1).getItem), te.inv(1).stackSize, te.inv(1).getMetadata) else Array(0, 0, 0),
-      if (te.inv(2) != null) Array(Item.getIdFromItem(te.inv(2).getItem), te.inv(2).stackSize, te.inv(2).getMetadata) else Array(0, 0, 0)
-    )
-  }
+    this.scheduleSwitchMode = te.scheduleSwitchMode
 
-  override def onMessage(message: MessageSpikeStation, ctx: MessageContext): IMessage = FMLClientHandler.instance().getClient.theWorld.getTileEntity(new BlockPos(message.x, message.y, message.z)) match {
-    case te: TileEntitySpikeStation =>
-      te.stored = if (message.stored > 0) Item.getItemById(message.stored) else null
-      te.nStored = message.nStored
-      te.mode = message.mode
-
-      for (i <- 0 to 2) te.inv(i) = if (message.items(i)(0) == 0) null else new ItemStack(Item.getItemById(message.items(i)(0)), message.items(i)(1), message.items(i)(2))
-
-      null
-    case _ => null
+    this.mode = te.mode
+    this.stored = te.stored
+    this.nStored = te.nStored
   }
 
   override def fromBytes(buf: ByteBuf): Unit = {
-    x = buf readInt()
-    y = buf readInt()
-    z = buf readInt()
+    this.x = buf readInt()
+    this.y = buf readInt()
+    this.z = buf readInt()
 
-    stored = buf readInt()
-    nStored = buf readInt()
-    mode = buf readByte()
+    this.scheduleSwitchMode = buf readBoolean()
 
-    for (i <- 0 to 2) for (j <- 0 to 2) items(i)(j) = buf.readInt()
+    var id = buf readInt()
+    for (i <- 0 to 2) {
+      if (id > 0) this.inv(i) = new ItemStack(Item.getItemById(id), buf.readInt(), buf.readInt())
+    }
+
+    this.mode = buf readByte()
+
+    id = buf readInt()
+    if (id > 0) {
+      this.stored = Item getItemById id
+      this.nStored = buf readInt()
+    }
   }
 
   override def toBytes(buf: ByteBuf): Unit = {
-    buf writeInt x
-    buf writeInt y
-    buf writeInt z
+    buf writeInt this.x
+    buf writeInt this.y
+    buf writeInt this.z
 
-    buf writeInt stored
-    buf writeInt nStored
-    buf writeByte mode
+    buf writeBoolean this.scheduleSwitchMode
 
-    for (i <- 0 to 2) for (j <- 0 to 2) buf writeInt items(i)(j)
+    for (i <- 0 to 2) if (inv(i) != null) {
+      buf writeInt Item.getIdFromItem(inv(i).getItem)
+      buf writeInt inv(i).stackSize
+      buf writeInt inv(i).getMetadata
+    } else buf writeInt 0
+
+    buf writeByte this.mode
+
+    if (stored != null) {
+      buf writeInt Item.getIdFromItem(this.stored)
+      buf writeInt this.nStored
+    } else buf writeInt 0
+  }
+
+  override def onMessage(msg: MessageSpikeStation, ctx: MessageContext): IMessage = {
+    val TE = if (ctx.side.isClient) {
+      FMLClientHandler.instance().getClient.theWorld.getTileEntity(new BlockPos(msg.x, msg.y, msg.z))
+    } else {
+      FMLCommonHandler.instance().getMinecraftServerInstance.getEntityWorld.getTileEntity(new BlockPos(msg.x, msg.y, msg.z))
+    }
+    TE match {
+      case te: TileEntitySpikeStation =>
+        println("ahem")
+        te.scheduleSwitchMode = msg.scheduleSwitchMode
+        te.inv = msg.inv
+        te.mode = msg.mode
+        te.stored = msg.stored
+        te.nStored = msg.nStored
+      case _ =>
+    }
+    null
   }
 }
