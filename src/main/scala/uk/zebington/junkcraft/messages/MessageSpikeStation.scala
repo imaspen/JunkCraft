@@ -41,8 +41,9 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
 
     this.scheduleSwitchMode = buf readBoolean()
 
-    var id = buf readInt()
+    var id = 0
     for (i <- 0 to 2) {
+      id = buf readInt()
       if (id > 0) this.inv(i) = new ItemStack(Item.getItemById(id), buf.readInt(), buf.readInt())
     }
 
@@ -62,11 +63,13 @@ class MessageSpikeStation extends IMessage with IMessageHandler[MessageSpikeStat
 
     buf writeBoolean this.scheduleSwitchMode
 
-    for (i <- 0 to 2) if (inv(i) != null) {
-      buf writeInt Item.getIdFromItem(inv(i).getItem)
-      buf writeInt inv(i).stackSize
-      buf writeInt inv(i).getMetadata
-    } else buf writeInt 0
+    for (i <- 0 to 2) {
+      if (inv(i) != null) {
+        buf writeInt Item.getIdFromItem(inv(i).getItem)
+        buf writeInt inv(i).stackSize
+        buf writeInt inv(i).getMetadata
+      } else buf writeInt 0
+    }
 
     buf writeByte this.mode
 

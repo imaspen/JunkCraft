@@ -80,18 +80,22 @@ class TileEntitySpikeStation extends TileEntity with IInventory with IUpdatePlay
   override def getDescriptionPacket = JCPacketHandler.Instance.getPacketFrom(new MessageSpikeStation(this))
 
   def switchMode(): Unit = {
-    mode = mode match {
-      case 0 => 1
-      case 1 => inv(1) = null; 0
+    if (inv(0) == null && inv(1) == null && inv(2) == null) {
+      mode = mode match {
+        case 0 => 1
+        case 1 => inv(1) = null; 0
+      }
     }
-    markDirty()
 
     if (worldObj.isRemote) {
       JCPacketHandler.Instance.sendToServer(new MessageSpikeStation(this))
     }
+    markDirty()
   }
 
   override def update(): Unit = {
+    //    println(s"$scheduleSwitchMode, $mode, $inv, $stored, $nStored")
+
     if (scheduleSwitchMode) {
       if (!worldObj.isRemote)
         JCPacketHandler.Instance.sendToAll(new MessageSpikeStation(this))

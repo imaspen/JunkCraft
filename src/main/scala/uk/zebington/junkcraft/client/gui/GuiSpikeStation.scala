@@ -7,6 +7,8 @@ import uk.zebington.junkcraft._
 import uk.zebington.junkcraft.common.containers.ContainerSpikeStation
 import uk.zebington.junkcraft.common.tileentities.TileEntitySpikeStation
 
+import scala.collection.JavaConversions._
+
 /**
  * Created by Charlotte on 22/02/2015.
  */
@@ -50,6 +52,15 @@ class GuiSpikeStation(inv: TileEntitySpikeStation, invPlayer: InventoryPlayer) e
       case 1 =>
         s = if (inv.stored != null) s"${StatCollector.translateToLocal(inv.stored.getUnlocalizedName + ".name")} x ${inv.nStored}" else "Empty!"
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, this.ySize - 98, 4210752)
+    }
+
+    val K: Int = (this.width - this.xSize) / 2
+    val L: Int = (this.height - this.ySize) / 2
+    val SX = K + 5
+    val SY = L + 5
+    if ((SX to SX + SW contains mouseX) && (SY to SY + SW contains mouseY)) {
+      val str = List(if (inv.inv(0) != null | inv.inv(1) != null | inv.inv(2) != null) "All slots must be empty!" else "Switch mode!")
+      this.drawHoveringText(str, mouseX - K, mouseY - L)
     }
   }
 
