@@ -20,6 +20,7 @@ package object junkcraft {
   final val NPickerUpper = "pickerupper"
   final val NCarDoor = "cardoor"
   final val NSpikes = "spikes"
+  final val NZombieArm = "zombiearm"
 
   // Blocks
   final val NElectricFence = "electricfence"
