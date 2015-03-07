@@ -1,7 +1,9 @@
 package uk.zebington.junkcraft
 
 import net.minecraft.item.{Item, ItemArmor, ItemStack}
-import net.minecraftforge.common.MinecraftForge
+import net.minecraft.util.{WeightedRandomChestContent, WeightedRandomFishable}
+import net.minecraft.world.gen.feature.WorldGenDungeons
+import net.minecraftforge.common.{ChestGenHooks, FishingHooks, MinecraftForge}
 import net.minecraftforge.fml.common.Mod.{EventHandler, Instance}
 import net.minecraftforge.fml.common.event.{FMLInitializationEvent, FMLLoadCompleteEvent, FMLPostInitializationEvent, FMLPreInitializationEvent}
 import net.minecraftforge.fml.common.network.NetworkRegistry
@@ -34,6 +36,21 @@ object JunkCraft {
   @EventHandler def init(e: FMLInitializationEvent) {
     Proxy registerTileEntities()
     Proxy registerRenderers()
+
+    FishingHooks addTreasure new WeightedRandomFishable(new ItemStack(JCItems.CarDoor), 50)
+    FishingHooks addTreasure new WeightedRandomFishable(new ItemStack(JCItems.Knife), 50)
+    FishingHooks addTreasure new WeightedRandomFishable(new ItemStack(JCItems.PickerUpper), 50)
+    FishingHooks addTreasure new WeightedRandomFishable(new ItemStack(JCItems.ZombieArm), 50)
+
+    ChestGenHooks addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(JCItems.CarDoor), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(JCItems.Knife), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(JCItems.PickerUpper), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.DUNGEON_CHEST, new WeightedRandomChestContent(new ItemStack(JCItems.ZombieArm), 0, 1, 50))
+
+    ChestGenHooks addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(JCItems.CarDoor), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(JCItems.Knife), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(JCItems.PickerUpper), 0, 1, 50))
+    ChestGenHooks addItem(ChestGenHooks.MINESHAFT_CORRIDOR, new WeightedRandomChestContent(new ItemStack(JCItems.ZombieArm), 0, 1, 50))
   }
 
   @EventHandler def postInit(e: FMLPostInitializationEvent) {
