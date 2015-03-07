@@ -13,7 +13,7 @@ object JCItems {
   final val PickerUpper = new ItemPickerUpper
   final val CarDoor = new ItemCarDoor
   final val Spikes = new ItemSpikes
-  final val ZombieArm = new ZombieArm
+  final val ZombieArm = new ItemZombieArm
 
   def init() {
     GameRegistry registerItem(Stabber, NStabber)
