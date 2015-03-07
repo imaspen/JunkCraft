@@ -21,6 +21,6 @@ class EntityZombieArmAttack(world: World, entityLiving: EntityLivingBase, damage
 
   override def onUpdate(): Unit = {
     super.onUpdate()
-    if(ticksExisted > 1) this.setDead()
+    if(ticksExisted > 2) this.setDead()
   }
 }
