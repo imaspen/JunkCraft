@@ -12,15 +12,17 @@ import net.minecraft.world.World
 class EntityZombieArmAttack(world: World, entityLiving: EntityLivingBase, damage: Float) extends EntityThrowable(world, entityLiving) {
 
   override def onImpact(mvObjPos: MovingObjectPosition): Unit = {
-    if (mvObjPos.entityHit != null) entityLiving match {
+    if (mvObjPos.entityHit != null && entityLiving.getDistance(posX, posY, posZ) <= 4) entityLiving match {
       case player: EntityPlayer => mvObjPos.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), damage)
       case _ => mvObjPos.entityHit.attackEntityFrom(DamageSource.causeMobDamage(entityLiving), damage)
     }
+
     setDead()
   }
 
   override def onUpdate(): Unit = {
     super.onUpdate()
-    if(ticksExisted > 2) this.setDead()
+    println(entityLiving.getDistance(posX, posY, posZ))
+    if (entityLiving.getDistance(posX, posY, posZ) > 5) setDead()
   }
 }
