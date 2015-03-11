@@ -29,6 +29,10 @@ package object junkcraft {
   // GUI IDs
   final val GSpikeStation = 0
 
+  // GUI I18n
+  final val NGSwitchMode = "junkcraft.gui.switchmode"
+  final val NGWarnNonEmpty = "junkcraft.gui.warn.nonempty"
+
   // Creative Tab
   final val TabJC = new CreativeTabs(CreativeTabs.getNextID, Id) {
     override def getTabIconItem: Item = JCItems.Stabber

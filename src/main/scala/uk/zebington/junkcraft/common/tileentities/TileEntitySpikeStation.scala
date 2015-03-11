@@ -9,7 +9,7 @@ import net.minecraft.nbt.NBTTagCompound
 import net.minecraft.server.gui.IUpdatePlayerListBox
 import net.minecraft.tileentity.TileEntity
 import net.minecraft.util.{ChatComponentText, ChatComponentTranslation, IChatComponent}
-import uk.zebington.junkcraft.handlers.JCPacketHandler
+import uk.zebington.junkcraft.handlers.{SpikeStationCraftingHandler, JCPacketHandler}
 import uk.zebington.junkcraft.init.JCItems
 import uk.zebington.junkcraft.messages.MessageSpikeStation
 
@@ -17,19 +17,14 @@ import uk.zebington.junkcraft.messages.MessageSpikeStation
  * Created by Charlotte on 22/02/2015.
  */
 class TileEntitySpikeStation extends TileEntity with IInventory with IUpdatePlayerListBox {
-  val SpikyItems: Map[Item, Int] = Map(
-    JCItems.Knife -> 8,
-    JCItems.Stabber -> 4,
-    Items.iron_sword -> 4,
-    Items.diamond_sword -> 2
-  )
-
   var scheduleSwitchMode = false
   var mode: Byte = 0
   var inv = new Array[ItemStack](3)
   var stored: Item = null
   var nStored: Int = 0
   var flag1 = false
+
+  def SpikyItems = SpikeStationCraftingHandler.SpikyItems
 
   override def closeInventory(playerIn: EntityPlayer) {}
 
@@ -80,7 +75,7 @@ class TileEntitySpikeStation extends TileEntity with IInventory with IUpdatePlay
   override def getDescriptionPacket = JCPacketHandler.Instance.getPacketFrom(new MessageSpikeStation(this))
 
   def switchMode(): Unit = {
-    if (inv(0) == null && inv(1) == null && inv(2) == null) {
+    if (isEmpty) {
       mode = mode match {
         case 0 => 1
         case 1 => inv(1) = null; 0
@@ -94,8 +89,6 @@ class TileEntitySpikeStation extends TileEntity with IInventory with IUpdatePlay
   }
 
   override def update(): Unit = {
-    //    println(s"$scheduleSwitchMode, $mode, $inv, $stored, $nStored")
-
     if (scheduleSwitchMode) {
       if (!worldObj.isRemote)
         JCPacketHandler.Instance.sendToAll(new MessageSpikeStation(this))
@@ -185,4 +178,6 @@ class TileEntitySpikeStation extends TileEntity with IInventory with IUpdatePlay
       scheduleSwitchMode = true
     }
   }
+
+  def isEmpty = inv(0) == null && ((mode == 0 && inv(1) == null) || mode == 1) && inv(2) == null
 }

@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.event.{FMLInitializationEvent, FMLLoadCompl
 import net.minecraftforge.fml.common.network.NetworkRegistry
 import net.minecraftforge.fml.common.registry.{GameData, GameRegistry}
 import net.minecraftforge.fml.common.{FMLCommonHandler, Mod, SidedProxy}
-import uk.zebington.junkcraft.handlers.{JCEventHandler, JCGuiHandler, JCPacketHandler}
+import uk.zebington.junkcraft.handlers.{SpikeStationCraftingHandler, JCEventHandler, JCGuiHandler, JCPacketHandler}
 import uk.zebington.junkcraft.init.{JCBlocks, JCItems}
 import uk.zebington.junkcraft.proxy.CommonProxy
 
@@ -62,6 +62,7 @@ object JunkCraft {
     }
     FMLCommonHandler.instance().bus().register(new JCEventHandler)
     MinecraftForge.EVENT_BUS.register(new JCEventHandler)
+    SpikeStationCraftingHandler.initSpikyItems()
   }
 
   @EventHandler def loaded(e: FMLLoadCompleteEvent): Unit = {
