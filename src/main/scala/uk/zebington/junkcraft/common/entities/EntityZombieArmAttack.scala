@@ -22,7 +22,6 @@ class EntityZombieArmAttack(world: World, entityLiving: EntityLivingBase, damage
 
   override def onUpdate(): Unit = {
     super.onUpdate()
-    println(entityLiving.getDistance(posX, posY, posZ))
     if (entityLiving.getDistance(posX, posY, posZ) > 5) setDead()
   }
 }
