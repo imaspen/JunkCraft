@@ -9,3 +9,6 @@ item.spikes.name=Spikes
 item.zombiearm.name=Zombie Arm
 
 itemGroup.junkcraft=Junk Craft
+
+junkcraft.gui.switchmode=Switch Mode
+junkcraft.gui.warn.nonempty=All slots must be empty to switch modes!
